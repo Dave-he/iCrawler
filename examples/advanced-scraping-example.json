@@ -1,0 +1,188 @@
+{
+  "name": "Advanced Web Scraping Workflow",
+  "description": "Complete example demonstrating all iCrawler node capabilities",
+  "nodes": [
+    {
+      "id": "1",
+      "type": "browserAction",
+      "position": { "x": 100, "y": 100 },
+      "data": {
+        "label": "Navigate to E-commerce Site",
+        "action": "navigate",
+        "url": "https://example-shop.com/products"
+      }
+    },
+    {
+      "id": "2",
+      "type": "elementExists",
+      "position": { "x": 400, "y": 100 },
+      "data": {
+        "label": "Check Products Loaded",
+        "selector": ".product-list",
+        "timeout": 10000
+      }
+    },
+    {
+      "id": "3",
+      "type": "loopElements",
+      "position": { "x": 700, "y": 100 },
+      "data": {
+        "label": "Loop Through Products",
+        "selector": ".product-item",
+        "action": "getData",
+        "dataRules": {
+          "title": ".product-title",
+          "price": ".product-price",
+          "image": {
+            "selector": "img",
+            "attribute": "src"
+          }
+        },
+        "maxElements": 20
+      }
+    },
+    {
+      "id": "4",
+      "type": "dataCollector",
+      "position": { "x": 1000, "y": 100 },
+      "data": {
+        "label": "Collect Product Data",
+        "collectionMode": "multiple",
+        "rootSelector": ".product-item",
+        "dataSchema": {
+          "name": ".product-title",
+          "price": ".product-price",
+          "rating": ".product-rating",
+          "availability": ".stock-status"
+        },
+        "maxItems": 50,
+        "includeMetadata": true,
+        "cleanData": true
+      }
+    },
+    {
+      "id": "5",
+      "type": "executeJavaScript",
+      "position": { "x": 1300, "y": 100 },
+      "data": {
+        "label": "Calculate Statistics",
+        "jsCode": "const products = inputData.collectedData;\nconst avgPrice = products.reduce((sum, p) => sum + parseFloat(p.price.replace('$', '')), 0) / products.length;\nreturn { totalProducts: products.length, averagePrice: avgPrice };",
+        "passInputData": true,
+        "returnType": "auto"
+      }
+    },
+    {
+      "id": "6",
+      "type": "screenshot",
+      "position": { "x": 1600, "y": 100 },
+      "data": {
+        "label": "Take Product List Screenshot",
+        "screenshotType": "fullPage",
+        "format": "png",
+        "outputMode": "base64",
+        "fileName": "products-page.png"
+      }
+    },
+    {
+      "id": "7",
+      "type": "dataMapper",
+      "position": { "x": 1900, "y": 100 },
+      "data": {
+        "label": "Transform Data",
+        "mappingRules": {
+          "products": "collectedData",
+          "stats": "scriptResult",
+          "screenshot": "screenshot",
+          "scrapedAt": "new Date().toISOString()"
+        },
+        "keepOriginal": false
+      }
+    },
+    {
+      "id": "8",
+      "type": "exportData",
+      "position": { "x": 2200, "y": 100 },
+      "data": {
+        "label": "Export to JSON",
+        "format": "json",
+        "filePath": "./output/products.json",
+        "prettyPrint": true,
+        "createDirectory": true
+      }
+    },
+    {
+      "id": "9",
+      "type": "exportData",
+      "position": { "x": 2200, "y": 300 },
+      "data": {
+        "label": "Export to CSV",
+        "format": "csv",
+        "filePath": "./output/products.csv",
+        "dataField": "products",
+        "csvDelimiter": ",",
+        "includeHeaders": true,
+        "createDirectory": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-1-2",
+      "source": "1",
+      "target": "2",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-2-3",
+      "source": "2",
+      "target": "3",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-3-4",
+      "source": "3",
+      "target": "4",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-4-5",
+      "source": "4",
+      "target": "5",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-5-6",
+      "source": "5",
+      "target": "6",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-6-7",
+      "source": "6",
+      "target": "7",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-7-8",
+      "source": "7",
+      "target": "8",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-7-9",
+      "source": "7",
+      "target": "9",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    }
+  ],
+  "createdAt": "2024-01-15T00:00:00.000Z",
+  "updatedAt": "2024-01-15T00:00:00.000Z"
+}

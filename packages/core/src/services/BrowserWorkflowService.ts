@@ -262,4 +262,205 @@ export class BrowserWorkflowService {
   hasPage(tabId: string): boolean {
     return this.pages.has(tabId);
   }
+
+  /**
+   * 获取元素属性
+   */
+  async getElementAttribute(selector: string, attribute: string): Promise<string | null> {
+    const page = await this.getCurrentPage();
+    
+    await this.waitForElement(selector);
+    const value = await page.$eval(selector, (el, attr) => el.getAttribute(attr), attribute);
+    
+    Logger.debug(`Got attribute "${attribute}" from element: ${selector}`);
+    return value;
+  }
+
+  /**
+   * 获取多个元素
+   */
+  async getElements(selector: string): Promise<any[]> {
+    const page = await this.getCurrentPage();
+    const elements = await page.$$(selector);
+    
+    Logger.debug(`Found ${elements.length} elements: ${selector}`);
+    return elements;
+  }
+
+  /**
+   * 检查元素是否存在
+   */
+  async elementExists(selector: string, timeout = 5000): Promise<boolean> {
+    const page = await this.getCurrentPage();
+    
+    try {
+      await page.waitForSelector(selector, { timeout });
+      Logger.debug(`Element exists: ${selector}`);
+      return true;
+    } catch (error) {
+      Logger.debug(`Element does not exist: ${selector}`);
+      return false;
+    }
+  }
+
+  /**
+   * 滚动到元素
+   */
+  async scrollToElement(selector: string): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await this.waitForElement(selector);
+    await page.$eval(selector, el => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    
+    Logger.debug(`Scrolled to element: ${selector}`);
+  }
+
+  /**
+   * 获取元素的HTML
+   */
+  async getElementHTML(selector: string): Promise<string> {
+    const page = await this.getCurrentPage();
+    
+    await this.waitForElement(selector);
+    const html = await page.$eval(selector, el => el.innerHTML);
+    
+    Logger.debug(`Got HTML from element: ${selector}`);
+    return html;
+  }
+
+  /**
+   * 选择下拉框选项
+   */
+  async selectOption(selector: string, value: string): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await this.waitForElement(selector);
+    await page.select(selector, value);
+    
+    Logger.debug(`Selected option "${value}" in: ${selector}`);
+  }
+
+  /**
+   * 等待导航完成
+   */
+  async waitForNavigation(options?: any): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await page.waitForNavigation({
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+      ...options
+    });
+    
+    Logger.debug('Navigation completed');
+  }
+
+  /**
+   * 获取页面标题
+   */
+  async getPageTitle(): Promise<string> {
+    const page = await this.getCurrentPage();
+    return page.title();
+  }
+
+  /**
+   * 设置Cookie
+   */
+  async setCookies(cookies: any[]): Promise<void> {
+    const page = await this.getCurrentPage();
+    await page.setCookie(...cookies);
+    
+    Logger.debug(`Set ${cookies.length} cookies`);
+  }
+
+  /**
+   * 获取Cookie
+   */
+  async getCookies(): Promise<any[]> {
+    const page = await this.getCurrentPage();
+    const cookies = await page.cookies();
+    
+    Logger.debug(`Got ${cookies.length} cookies`);
+    return cookies;
+  }
+
+  /**
+   * 清除Cookie
+   */
+  async clearCookies(): Promise<void> {
+    const page = await this.getCurrentPage();
+    const cookies = await page.cookies();
+    
+    if (cookies.length > 0) {
+      await page.deleteCookie(...cookies);
+      Logger.debug('Cleared all cookies');
+    }
+  }
+
+  /**
+   * 模拟鼠标悬停
+   */
+  async hoverElement(selector: string): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await this.waitForElement(selector);
+    await page.hover(selector);
+    
+    Logger.debug(`Hovered over element: ${selector}`);
+  }
+
+  /**
+   * 等待指定时间
+   */
+  async wait(milliseconds: number): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, milliseconds));
+    Logger.debug(`Waited for ${milliseconds}ms`);
+  }
+
+  /**
+   * 刷新页面
+   */
+  async reload(options?: any): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await page.reload({
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+      ...options
+    });
+    
+    Logger.debug('Page reloaded');
+  }
+
+  /**
+   * 返回上一页
+   */
+  async goBack(options?: any): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await page.goBack({
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+      ...options
+    });
+    
+    Logger.debug('Navigated back');
+  }
+
+  /**
+   * 前进到下一页
+   */
+  async goForward(options?: any): Promise<void> {
+    const page = await this.getCurrentPage();
+    
+    await page.goForward({
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+      ...options
+    });
+    
+    Logger.debug('Navigated forward');
+  }
 }
