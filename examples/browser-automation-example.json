@@ -1,0 +1,91 @@
+{
+  "name": "Example Browser Automation Workflow",
+  "description": "Example workflow demonstrating browser automation capabilities",
+  "nodes": [
+    {
+      "id": "1",
+      "type": "browserAction",
+      "position": { "x": 100, "y": 100 },
+      "data": {
+        "label": "Navigate to Website",
+        "action": "navigate",
+        "url": "https://example.com"
+      }
+    },
+    {
+      "id": "2",
+      "type": "elementExists",
+      "position": { "x": 400, "y": 100 },
+      "data": {
+        "label": "Check Header Exists",
+        "selector": "h1",
+        "timeout": 5000
+      }
+    },
+    {
+      "id": "3",
+      "type": "browserAction",
+      "position": { "x": 700, "y": 100 },
+      "data": {
+        "label": "Get Page Title",
+        "action": "executeScript",
+        "script": "return document.title;"
+      }
+    },
+    {
+      "id": "4",
+      "type": "dataMapper",
+      "position": { "x": 1000, "y": 100 },
+      "data": {
+        "label": "Map Results",
+        "mappingRules": {
+          "pageTitle": "browserResult.result",
+          "timestamp": "new Date().toISOString()"
+        },
+        "keepOriginal": true
+      }
+    },
+    {
+      "id": "5",
+      "type": "browserAction",
+      "position": { "x": 1300, "y": 100 },
+      "data": {
+        "label": "Take Screenshot",
+        "action": "screenshot",
+        "fullPage": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-1-2",
+      "source": "1",
+      "target": "2",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-2-3",
+      "source": "2",
+      "target": "3",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-3-4",
+      "source": "3",
+      "target": "4",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    },
+    {
+      "id": "e-4-5",
+      "source": "4",
+      "target": "5",
+      "sourceHandle": "output",
+      "targetHandle": "input"
+    }
+  ],
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}

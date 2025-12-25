@@ -1,0 +1,34 @@
+{
+  "name": "@icrawler/nodes-browser",
+  "version": "1.0.0",
+  "description": "Browser automation nodes for iCrawler",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "dev": "tsc-watch -p tsconfig.build.json --onCompilationComplete \"tsc-alias -p tsconfig.build.json\"",
+    "clean": "rimraf dist .turbo",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "test": "jest"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "n8n-workflow": "^1.100.0",
+    "@icrawler/core": "workspace:*",
+    "puppeteer": "^23.0.0",
+    "chrome-remote-interface": "^0.34.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/jest": "^29.5.3",
+    "@types/node": "*",
+    "jest": "^29.6.2",
+    "rimraf": "^5.0.1",
+    "tsc-alias": "^1.8.10",
+    "tsc-watch": "^6.2.0",
+    "typescript": "*"
+  }
+}

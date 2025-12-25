@@ -1,0 +1,37 @@
+{
+  "name": "@icrawler/frontend",
+  "version": "1.0.0",
+  "description": "Frontend interface for iCrawler",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "clean": "rimraf dist",
+    "format": "biome format --write .",
+    "lint": "biome check ."
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "@vue/compat": "^3.4.0",
+    "vue-router": "^4.2.0",
+    "pinia": "^2.1.0",
+    "vue-i18n": "^9.5.0",
+    "@vue-flow/core": "^1.8.0",
+    "@vue-flow/minimap": "^1.8.0",
+    "@vue-flow/background": "^1.8.0",
+    "@vue-flow/node-resizer": "^1.8.0",
+    "element-plus": "^2.5.0",
+    "axios": "^1.6.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/node": "*",
+    "@vitejs/plugin-vue": "^4.5.0",
+    "typescript": "*",
+    "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.17.0",
+    "workbox-window": "^7.0.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "./packages/core/tsconfig.json",
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/nodes-browser" },
+    { "path": "./packages/nodes-data" },
+    { "path": "./packages/frontend" },
+    { "path": "./packages/cli" }
+  ]
+}
